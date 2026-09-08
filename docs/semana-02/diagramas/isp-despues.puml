@@ -1,0 +1,43 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+title Diseño después de aplicar ISP
+
+interface OccupancySummaryInterface {
+  + getSummary()
+}
+
+interface OccupancyFilterInterface {
+  + getByWard(wardId)
+  + getByStatus(status)
+}
+
+interface OccupancyMetricsInterface {
+  + getOccupancyRate()
+}
+
+interface BedDetailInterface {
+  + getBedDetail(bedId)
+}
+
+class OccupancyService
+class SummaryWidget
+class FilterPanel
+class MetricsWidget
+class BedDetailView
+
+OccupancyService ..|> OccupancySummaryInterface
+OccupancyService ..|> OccupancyFilterInterface
+OccupancyService ..|> OccupancyMetricsInterface
+OccupancyService ..|> BedDetailInterface
+
+SummaryWidget --> OccupancySummaryInterface
+FilterPanel --> OccupancyFilterInterface
+MetricsWidget --> OccupancyMetricsInterface
+BedDetailView --> BedDetailInterface
+
+note right of OccupancyService
+El servicio puede implementar varias interfaces pequeñas,
+pero cada cliente depende solo de la que necesita.
+end note
+@enduml
