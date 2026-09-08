@@ -1,0 +1,30 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+title Diseño antes de aplicar ISP
+
+interface OccupancyDashboardInterface {
+  + getSummary()
+  + getByWard(wardId)
+  + getByStatus(status)
+  + getOccupancyRate()
+  + getBedDetail(bedId)
+}
+
+class OccupancyService
+class SummaryWidget
+class FilterPanel
+class MetricsWidget
+class BedDetailView
+
+OccupancyService ..|> OccupancyDashboardInterface
+SummaryWidget --> OccupancyDashboardInterface : solo usa getSummary()
+FilterPanel --> OccupancyDashboardInterface : usa filtros
+MetricsWidget --> OccupancyDashboardInterface : solo usa getOccupancyRate()
+BedDetailView --> OccupancyDashboardInterface : solo usa getBedDetail()
+
+note right of OccupancyDashboardInterface
+La interfaz concentra operaciones distintas.
+Los clientes dependen de métodos que no usan.
+end note
+@enduml
