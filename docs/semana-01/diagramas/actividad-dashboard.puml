@@ -1,0 +1,67 @@
+@startuml
+
+start
+
+:Usuario abre el dashboard\nde ocupación hospitalaria;
+
+:Sistema valida sesión,\ntenant y permisos;
+
+if (¿Usuario autorizado?) then (Sí)
+
+    :Solicitar información\nde salas y camas;
+
+    if (¿Ocurrió un error?) then (Sí)
+
+        :Registrar el error;
+        :Mostrar mensaje de error;
+        stop
+
+    else (No)
+
+        if (¿Existen datos?) then (Sí)
+
+            :Agrupar camas por sala;
+            :Clasificar camas por estado;
+
+            :Calcular total de camas;
+            :Calcular camas ocupadas;
+            :Calcular camas disponibles;
+            :Calcular camas en mantenimiento;
+            :Calcular porcentaje de ocupación;
+
+            :Mostrar resumen general;
+            :Mostrar ocupación por sala;
+
+            if (¿Usuario aplica filtros?) then (Sí)
+
+                :Seleccionar sala\no estado de cama;
+                :Actualizar resultados;
+                :Mostrar información filtrada;
+
+            else (No)
+
+                :Mantener resumen general;
+
+            endif
+
+            :Usuario consulta los resultados;
+            stop
+
+        else (No)
+
+            :Mostrar estado vacío;
+            :Informar que no existen\ndatos de ocupación;
+            stop
+
+        endif
+
+    endif
+
+else (No)
+
+    :Mostrar acceso denegado;
+    stop
+
+endif
+
+@enduml
