@@ -1,0 +1,72 @@
+@startuml
+
+actor "Usuario hospitalario" as Usuario
+boundary "Interfaz Vue 3" as Vista
+control "API Laravel" as API
+control "Middleware de seguridad" as Seguridad
+control "Servicio de ocupación" as Servicio
+database "Base de datos HIS" as BD
+
+Usuario -> Vista : Abrir dashboard de ocupación
+Vista -> API : Solicitar datos de ocupación\nJWT + X-Tenant-ID
+
+API -> Seguridad : Validar token, tenant y permiso
+
+alt Acceso no autorizado
+
+    Seguridad --> API : Acceso denegado
+    API --> Vista : Respuesta 401 o 403
+    Vista --> Usuario : Mostrar acceso denegado
+
+else Acceso autorizado
+
+    Seguridad --> API : Acceso permitido
+    API -> Servicio : Obtener ocupación hospitalaria
+    Servicio -> BD : Consultar salas y camas
+
+    alt Error al consultar la base de datos
+
+        BD --> Servicio : Error de consulta
+        Servicio --> API : Informar error
+        API --> Vista : Respuesta 500
+        Vista --> Usuario : Mostrar mensaje de error
+
+    else Consulta correcta
+
+        BD --> Servicio : Salas y camas registradas
+        Servicio -> Servicio : Agrupar camas por sala
+        Servicio -> Servicio : Clasificar camas por estado
+        Servicio -> Servicio : Calcular porcentaje de ocupación
+
+        alt No existen datos
+
+            Servicio --> API : Resultado vacío
+            API --> Vista : Respuesta sin registros
+            Vista --> Usuario : Mostrar estado vacío
+
+        else Existen datos
+
+            Servicio --> API : Resumen consolidado
+            API --> Vista : Datos de ocupación
+            Vista --> Usuario : Mostrar dashboard
+
+            opt Usuario aplica un filtro
+
+                Usuario -> Vista : Seleccionar sala o estado
+                Vista -> API : Solicitar datos filtrados
+                API -> Servicio : Obtener ocupación filtrada
+                Servicio -> BD : Consultar camas con filtros
+                BD --> Servicio : Resultados filtrados
+                Servicio --> API : Resumen filtrado
+                API --> Vista : Datos actualizados
+                Vista --> Usuario : Mostrar resultados filtrados
+
+            end
+
+        end
+
+    end
+
+end
+
+@enduml
