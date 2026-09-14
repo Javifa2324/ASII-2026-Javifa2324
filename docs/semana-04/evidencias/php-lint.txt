@@ -1,0 +1,8 @@
+No syntax errors detected in docs/semana-04/codigo/Application/OccupancyService.php
+No syntax errors detected in docs/semana-04/codigo/Domain/BedRepository.php
+No syntax errors detected in docs/semana-04/codigo/Domain/BedStatus.php
+No syntax errors detected in docs/semana-04/codigo/Domain/OccupancyCalculator.php
+No syntax errors detected in docs/semana-04/codigo/Persistence/PdoBedRepository.php
+No syntax errors detected in docs/semana-04/codigo/Persistence/PdoConnectionFactory.php
+No syntax errors detected in docs/semana-04/codigo/Persistence/InMemoryBedRepository.php
+No syntax errors detected in docs/semana-04/codigo/Presentation/OccupancyController.php

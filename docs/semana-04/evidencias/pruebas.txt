@@ -1,0 +1,8 @@
+[PASS] todos
+[PASS] filtro por sala
+[PASS] filtro por estado
+[PASS] sala y estado
+
+Pruebas: 4
+Correctas: 4
+Fallidas: 0

@@ -1,0 +1,47 @@
+@startuml
+
+title Semana 04 - Arquitectura en capas y patrón Repository
+
+package "Presentation" {
+    class OccupancyController
+}
+
+package "Application" {
+    class OccupancyService
+}
+
+package "Domain" {
+    interface BedRepository {
+        + findAll(room, status)
+    }
+
+    class BedStatus
+    class OccupancyCalculator
+}
+
+package "Persistence" {
+    class PdoBedRepository
+    class InMemoryBedRepository
+    class PdoConnectionFactory
+}
+
+database "Base de datos" as DB
+
+OccupancyController --> OccupancyService
+OccupancyService --> BedRepository
+OccupancyService --> OccupancyCalculator
+OccupancyService --> BedStatus
+
+PdoBedRepository ..|> BedRepository
+InMemoryBedRepository ..|> BedRepository
+
+PdoBedRepository --> PdoConnectionFactory
+PdoConnectionFactory --> DB
+
+note right of BedRepository
+El caso de uso depende
+del contrato y no de una
+implementación concreta.
+end note
+
+@enduml
