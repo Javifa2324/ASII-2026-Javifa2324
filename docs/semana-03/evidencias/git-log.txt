@@ -1,0 +1,10 @@
+6f51bb8 feat(asii-09): add micro HIS occupancy dashboard
+bfff21a docs: add week 2 ISP analysis for occupancy dashboard
+4a6109b docs: add UML diagrams for hospital occupancy dashboard
+3892d0a docs: add UML traceability and defense materials
+11d922a Merge pull request #44 from compilations-teams/feature/asii-19-ingreso-de-resultados-de-laboratorio-orem6
+2cc7476 Merge pull request #45 from compilations-teams/feature/asii-28-qa-funcional-didhyerortiz
+7e22051 docs(asii-28): agregar análisis y diagramas de semana 1
+23d1e61 Merge pull request #40 from compilations-teams/feature/asii-20-validacion-de-resultados-por-bioquimico-gioore
+de92e5b diagramas uml
+8679fdd Merge pull request #38 from compilations-teams/feature/asii-24-contratos-api-openapi-postman-y-documentac-codsebas

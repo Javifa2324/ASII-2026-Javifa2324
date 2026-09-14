@@ -1,0 +1,12 @@
+No syntax errors detected in ./public/index.php
+No syntax errors detected in ./src/Presentation/OccupancyController.php
+No syntax errors detected in ./src/Application/OccupancyService.php
+No syntax errors detected in ./src/Domain/BedStatus.php
+No syntax errors detected in ./src/Domain/BedRepository.php
+No syntax errors detected in ./src/Domain/OccupancyCalculator.php
+No syntax errors detected in ./src/Persistence/PdoConnectionFactory.php
+No syntax errors detected in ./src/Persistence/PdoBedRepository.php
+No syntax errors detected in ./config/database.php
+No syntax errors detected in ./database/init.php
+No syntax errors detected in ./tests/run.php
+No syntax errors detected in ./bootstrap.php

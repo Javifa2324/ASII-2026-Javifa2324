@@ -1,0 +1,7 @@
+[PASS] camino feliz
+[PASS] regla de dominio
+[PASS] error de persistencia
+
+Pruebas ejecutadas: 3
+Correctas: 3
+Fallidas: 0
