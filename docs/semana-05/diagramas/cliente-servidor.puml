@@ -1,0 +1,45 @@
+@startuml
+
+title Semana 05 - Arquitectura cliente-servidor
+
+actor Usuario
+
+package "Cliente" {
+    component "Dashboard Web" as Client
+}
+
+package "Servidor" {
+
+    package "Presentation" {
+        component "API REST\nGET /api/v1/occupancy" as API
+        component "OccupancyController" as Controller
+    }
+
+    package "Application" {
+        component "OccupancyService" as Service
+    }
+
+    package "Domain" {
+        interface "BedRepository" as Repository
+        component "BedStatus" as Status
+        component "OccupancyCalculator" as Calculator
+    }
+
+    package "Persistence" {
+        component "PdoBedRepository" as PdoRepo
+    }
+}
+
+database "Base de datos" as DB
+
+Usuario --> Client
+Client --> API : HTTP / JSON
+API --> Controller
+Controller --> Service
+Service --> Repository
+Service --> Status
+Service --> Calculator
+PdoRepo ..|> Repository
+PdoRepo --> DB
+
+@enduml
