@@ -1,0 +1,55 @@
+@startuml
+
+title Semana 05 - Secuencia de consulta API REST
+
+actor Usuario
+participant "Cliente Web" as Client
+participant "API REST" as API
+participant "OccupancyController" as Controller
+participant "OccupancyService" as Service
+participant "BedRepository" as Repository
+participant "OccupancyCalculator" as Calculator
+
+Usuario -> Client : Consultar ocupación
+
+Client -> API : GET /api/v1/occupancy?room=...&status=...
+
+API -> Controller : parámetros room y status
+
+Controller -> Service : execute(room, status)
+
+Service -> Service : normalizar filtros
+
+Service -> Service : validar status
+
+Service -> Repository : findAll(room, status)
+
+Repository --> Service : camas encontradas
+
+Service -> Calculator : summarize(beds)
+
+Calculator --> Service : resumen de ocupación
+
+Service --> Controller : resultado
+
+Controller --> API : status 200 + data
+
+API --> Client : JSON
+
+Client --> Usuario : mostrar dashboard actualizado
+
+alt Estado inválido
+    Service --> Controller : InvalidArgumentException
+    Controller --> API : 422
+    API --> Client : error de validación
+    Client --> Usuario : mostrar mensaje
+end
+
+alt Error de persistencia
+    Repository --> Service : excepción
+    Controller --> API : 500
+    API --> Client : error controlado
+    Client --> Usuario : mostrar error y permitir reintento
+end
+
+@enduml

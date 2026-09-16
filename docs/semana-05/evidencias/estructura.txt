@@ -1,0 +1,10 @@
+docs/semana-05/ANALISIS_MICROSERVICIO.md
+docs/semana-05/ARQUITECTURA_CLIENTE_SERVIDOR.md
+docs/semana-05/CONTRATO_API.md
+docs/semana-05/diagramas/cliente-servidor.puml
+docs/semana-05/diagramas/secuencia-api.puml
+docs/semana-05/evidencias/estructura.txt
+docs/semana-05/evidencias/rama.txt
+docs/semana-05/PLAN_GIT.md
+docs/semana-05/PLAN_MIGRACION.md
+docs/semana-05/README.md
