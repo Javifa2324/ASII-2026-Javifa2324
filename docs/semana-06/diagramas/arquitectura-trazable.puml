@@ -1,0 +1,30 @@
+@startuml
+title Semana 06 - Arquitectura trazable para defensa
+
+actor Usuario
+component "Dashboard Web" as Cliente
+component "API REST\nGET /api/v1/occupancy" as API
+component "OccupancyController" as Controller
+component "OccupancyService" as Service
+interface "BedRepository" as Repo
+component "OccupancyCalculator" as Calc
+component "BedStatus" as Status
+component "PdoBedRepository" as PdoRepo
+database "Base de datos" as DB
+
+Usuario --> Cliente
+Cliente --> API
+API --> Controller
+Controller --> Service
+Service --> Repo
+Service --> Calc
+Service --> Status
+PdoRepo ..|> Repo
+PdoRepo --> DB
+
+note right of Service
+Conserva la lógica existente:
+room, status y reglas de ocupación.
+end note
+
+@enduml
