@@ -1,0 +1,54 @@
+@startuml
+
+title Semana 07 - Diagrama de componentes
+
+actor Usuario
+
+package "Frontend / UI" {
+    component "Dashboard de ocupación" as Frontend
+}
+
+package "Presentation" {
+    component "OccupancyController" as Controller
+}
+
+package "Application" {
+    component "OccupancyQuery" as Query
+    component "OccupancyService" as Service
+    component "OccupancySummary" as Summary
+}
+
+package "Domain" {
+    component "BedStatus" as Status
+    component "OccupancyCalculator" as Calculator
+    interface "BedRepository" as Repository
+}
+
+package "Persistence" {
+    component "PdoBedRepository" as PdoRepository
+}
+
+database "Base de datos" as DB
+
+Usuario --> Frontend
+
+Frontend --> Controller : room, status
+
+Controller --> Query : construir entrada
+Controller --> Service : ejecutar consulta
+
+Service --> Query : consultar filtros
+Service --> Status : validar estado
+Service --> Repository : findAll(room, status)
+Service --> Calculator : summarize(beds)
+
+PdoRepository ..|> Repository
+PdoRepository --> DB
+
+Calculator --> Summary : indicadores
+Service --> Summary : resultado
+
+Summary --> Controller
+Controller --> Frontend : respuesta
+
+@enduml
