@@ -1,0 +1,47 @@
+@startuml
+
+title Semana 07 - Refactor antes y despues
+
+left to right direction
+
+package "ANTES" {
+
+    component "Frontend" as FrontA
+    component "OccupancyController" as CtrlA
+    component "OccupancyService\n(room, status)" as ServiceA
+    component "Array asociativo" as ArrayA
+
+    FrontA --> CtrlA
+    CtrlA --> ServiceA : room, status
+    ServiceA --> ArrayA
+    ArrayA --> CtrlA : claves internas
+}
+
+package "DESPUES" {
+
+    component "Frontend" as FrontD
+    component "OccupancyController" as CtrlD
+    component "OccupancyQuery" as QueryD
+    component "OccupancyService" as ServiceD
+    component "OccupancySummary" as SummaryD
+
+    FrontD --> CtrlD
+    CtrlD --> QueryD : room, status
+    QueryD --> ServiceD
+    ServiceD --> SummaryD
+    SummaryD --> CtrlD
+}
+
+note bottom of ServiceA
+Contrato implícito:
+parámetros separados
+y arreglo sin tipo explícito
+end note
+
+note bottom of ServiceD
+Contrato explícito:
+OccupancyQuery
+y OccupancySummary
+end note
+
+@enduml
