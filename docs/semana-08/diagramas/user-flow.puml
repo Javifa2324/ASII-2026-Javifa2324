@@ -1,0 +1,32 @@
+@startuml
+title Semana 08 - User flow UX de ocupación hospitalaria
+start
+:Usuario hospitalario autorizado ingresa al Dashboard;
+:Mostrar filtros de sala y estado;
+if (¿Aplicar filtros?) then (Sí)
+  :Seleccionar sala y/o estado;
+else (No)
+  :Mantener filtros en Todos;
+endif
+:Presionar Consultar;
+:Mostrar estado de carga;
+:Enviar solicitud de ocupación;
+if (¿Solicitud correcta?) then (Sí)
+  if (¿Existen resultados?) then (Sí)
+    :Mostrar indicadores y detalle por sala;
+    :Mostrar Datos actualizados correctamente;
+    :Mostrar fecha y procedencia;
+  else (No)
+    :Mostrar estado vacío;
+    :Ofrecer limpiar o cambiar filtros;
+  endif
+else (No)
+  :Mostrar error controlado;
+  :Ofrecer Reintentar;
+endif
+if (¿Solicitar ayuda?) then (Sí)
+  :Mostrar explicación de estados, porcentaje y procedencia;
+endif
+:Permitir nueva consulta;
+stop
+@enduml
