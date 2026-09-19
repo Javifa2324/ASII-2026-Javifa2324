@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de ocupación hospitalaria</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #1f2937;
+}
+
+header {
+    background: #ffffff;
+    border-bottom: 1px solid #dfe3e8;
+    padding: 18px 24px;
+}
+
+header h1 {
+    margin: 0 0 6px;
+    font-size: 24px;
+}
+
+header p {
+    margin: 0;
+    color: #667085;
+}
+
+main {
+    max-width: 1200px;
+    margin: auto;
+    padding: 24px;
+}
+
+.toolbar {
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 22px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+select,
+button {
+    min-height: 44px;
+    padding: 10px 14px;
+    border: 1px solid #aeb6c2;
+    border-radius: 8px;
+    background: white;
+    font-size: 15px;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:focus,
+select:focus {
+    outline: 3px solid #86b7fe;
+    outline-offset: 2px;
+}
+
+.nav {
+    display: flex;
+    gap: 8px;
+}
+
+.nav button.active {
+    font-weight: bold;
+    border-width: 2px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+.card {
+    background: white;
+    border: 1px solid #dfe3e8;
+    border-radius: 10px;
+    padding: 18px;
+}
+
+.card .label {
+    color: #667085;
+    font-size: 14px;
+}
+
+.card .value {
+    display: block;
+    margin-top: 8px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.section {
+    background: white;
+    border: 1px solid #dfe3e8;
+    border-radius: 10px;
+    margin-top: 22px;
+    padding: 18px;
+}
+
+.section h2 {
+    margin-top: 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.message {
+    padding: 18px;
+    border: 1px solid #dfe3e8;
+    border-radius: 8px;
+    margin-top: 20px;
+    background: white;
+}
+
+.hidden {
+    display: none;
+}
+
+.mobile-list {
+    display: none;
+}
+
+.ward-card {
+    border: 1px solid #dfe3e8;
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 12px;
+}
+
+.ward-card p {
+    margin: 7px 0;
+}
+
+footer {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 24px 24px;
+    color: #667085;
+    font-size: 13px;
+}
+
+@media (max-width: 900px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    header {
+        padding: 16px;
+    }
+
+    header h1 {
+        font-size: 20px;
+    }
+
+    main {
+        padding: 16px;
+    }
+
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .nav {
+        width: 100%;
+    }
+
+    .nav button {
+        flex: 1;
+    }
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card {
+        padding: 14px;
+    }
+
+    .card .value {
+        font-size: 24px;
+    }
+
+    table {
+        display: none;
+    }
+
+    .mobile-list {
+        display: block;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Panel de ocupación hospitalaria</h1>
+    <p id="cutoff">Fecha de corte: 18/09/2026 21:00</p>
+</header>
+
+<main>
+
+<div class="toolbar">
+
+    <div class="field">
+        <label for="ward">Sala</label>
+
+        <select id="ward">
+            <option value="all">Todas las salas</option>
+            <option value="uci">UCI</option>
+            <option value="emergencia">Emergencia</option>
+            <option value="medicina">Medicina</option>
+        </select>
+    </div>
+
+    <nav class="nav" aria-label="Secciones del prototipo">
+        <button id="btnSummary" class="active">
+            Resumen
+        </button>
+
+        <button id="btnDetail">
+            Detalle
+        </button>
+    </nav>
+
+</div>
+
+<div id="status" aria-live="polite"></div>
+
+<section id="summaryView">
+
+    <div class="cards">
+
+        <div class="card">
+            <span class="label">Disponibles</span>
+            <span class="value" id="available">27</span>
+        </div>
+
+        <div class="card">
+            <span class="label">Ocupadas</span>
+            <span class="value" id="occupied">78</span>
+        </div>
+
+        <div class="card">
+            <span class="label">Ocupación</span>
+            <span class="value" id="percentage">74.29%</span>
+        </div>
+
+        <div class="card">
+            <span class="label">Total de camas</span>
+            <span class="value" id="total">120</span>
+        </div>
+
+        <div class="card">
+            <span class="label">Operativas</span>
+            <span class="value" id="operational">105</span>
+        </div>
+
+        <div class="card">
+            <span class="label">En limpieza</span>
+            <span class="value" id="cleaning">5</span>
+        </div>
+
+        <div class="card">
+            <span class="label">Mantenimiento</span>
+            <span class="value" id="maintenance">10</span>
+        </div>
+
+        <div class="card">
+            <span class="label">Fuera de servicio</span>
+            <span class="value" id="out">10</span>
+        </div>
+
+    </div>
+
+</section>
+
+<section id="detailView" class="section hidden">
+
+    <h2>Detalle por sala</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Sala</th>
+                <th>Ocupadas</th>
+                <th>Disponibles</th>
+                <th>Ocupación</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>UCI</td>
+                <td>8</td>
+                <td>2</td>
+                <td>80%</td>
+            </tr>
+
+            <tr>
+                <td>Emergencia</td>
+                <td>14</td>
+                <td>6</td>
+                <td>70%</td>
+            </tr>
+
+            <tr>
+                <td>Medicina</td>
+                <td>22</td>
+                <td>8</td>
+                <td>73.33%</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="mobile-list">
+
+        <article class="ward-card">
+            <strong>UCI</strong>
+            <p>Ocupadas: 8</p>
+            <p>Disponibles: 2</p>
+            <p>Ocupación: 80%</p>
+        </article>
+
+        <article class="ward-card">
+            <strong>Emergencia</strong>
+            <p>Ocupadas: 14</p>
+            <p>Disponibles: 6</p>
+            <p>Ocupación: 70%</p>
+        </article>
+
+        <article class="ward-card">
+            <strong>Medicina</strong>
+            <p>Ocupadas: 22</p>
+            <p>Disponibles: 8</p>
+            <p>Ocupación: 73.33%</p>
+        </article>
+
+    </div>
+
+</section>
+
+<section class="section">
+
+    <h2>Estados del sistema</h2>
+
+    <button id="simulateError">
+        Simular error de carga
+    </button>
+
+    <button id="retry" class="hidden">
+        Reintentar
+    </button>
+
+</section>
+
+</main>
+
+<footer>
+    Prototipo académico — ASII-09 Panel de ocupación hospitalaria
+</footer>
+
+<script>
+const data = {
+    all: {
+        available: 27,
+        occupied: 78,
+        percentage: "74.29%",
+        total: 120,
+        operational: 105,
+        cleaning: 5,
+        maintenance: 10,
+        out: 10
+    },
+
+    uci: {
+        available: 2,
+        occupied: 8,
+        percentage: "80%",
+        total: 12,
+        operational: 10,
+        cleaning: 1,
+        maintenance: 1,
+        out: 2
+    },
+
+    emergencia: {
+        available: 6,
+        occupied: 14,
+        percentage: "70%",
+        total: 22,
+        operational: 20,
+        cleaning: 1,
+        maintenance: 1,
+        out: 2
+    },
+
+    medicina: {
+        available: 8,
+        occupied: 22,
+        percentage: "73.33%",
+        total: 34,
+        operational: 30,
+        cleaning: 2,
+        maintenance: 2,
+        out: 4
+    }
+};
+
+const ward = document.getElementById("ward");
+const status = document.getElementById("status");
+
+function render(key) {
+    const item = data[key];
+
+    Object.keys(item).forEach((field) => {
+        document.getElementById(field).textContent =
+            item[field];
+    });
+
+    status.textContent =
+        "Información actualizada correctamente.";
+}
+
+ward.addEventListener("change", () => {
+    status.textContent = "Cargando información...";
+
+    setTimeout(() => {
+        render(ward.value);
+    }, 350);
+});
+
+const summaryView =
+    document.getElementById("summaryView");
+
+const detailView =
+    document.getElementById("detailView");
+
+const btnSummary =
+    document.getElementById("btnSummary");
+
+const btnDetail =
+    document.getElementById("btnDetail");
+
+btnSummary.addEventListener("click", () => {
+    summaryView.classList.remove("hidden");
+    detailView.classList.add("hidden");
+
+    btnSummary.classList.add("active");
+    btnDetail.classList.remove("active");
+});
+
+btnDetail.addEventListener("click", () => {
+    summaryView.classList.add("hidden");
+    detailView.classList.remove("hidden");
+
+    btnDetail.classList.add("active");
+    btnSummary.classList.remove("active");
+});
+
+const errorButton =
+    document.getElementById("simulateError");
+
+const retryButton =
+    document.getElementById("retry");
+
+errorButton.addEventListener("click", () => {
+    status.textContent =
+        "No fue posible cargar la información de ocupación.";
+
+    retryButton.classList.remove("hidden");
+});
+
+retryButton.addEventListener("click", () => {
+    status.textContent =
+        "Información cargada nuevamente.";
+
+    retryButton.classList.add("hidden");
+
+    render(ward.value);
+});
+</script>
+
+</body>
+</html>
